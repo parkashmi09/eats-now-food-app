@@ -19,7 +19,7 @@ export default function DashboardLeft() {
               ? `${isActiveStyles} px-4 py-2 border-l-8 border-orange-500 `
               : isNotActiveStyles
           }
-          to={"/"}
+          to={"/dashboard/home"}
         >
           Home
         </NavLink>
@@ -49,7 +49,7 @@ export default function DashboardLeft() {
               ? `${isActiveStyles} px-4 py-2 border-l-8 border-orange-500 `
               : isNotActiveStyles
           }
-          to={"/dashboard/newItem"}
+          to={"/dashboard/new-Item"}
         >
           Add New Item
         </NavLink>

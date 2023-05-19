@@ -11,6 +11,9 @@ body {
     "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
     sans-serif;
 }
+.MuiPaper-root {
+  width: 100%;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

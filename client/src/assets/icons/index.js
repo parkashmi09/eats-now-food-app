@@ -14,6 +14,7 @@ import {
   BsToggles2,
   BsFillBellFill,
 } from "react-icons/bs";
+import { HiCurrencyRupee } from "react-icons/hi2";
 
 export {
   FaEnvelope,
@@ -23,6 +24,7 @@ export {
   FaCheck,
   FaArrowLeft,
   FcGoogle,
+  HiCurrencyRupee,
   FcClearFilters,
   MdShoppingCart,
   MdLogout,

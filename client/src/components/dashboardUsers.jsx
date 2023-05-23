@@ -6,10 +6,10 @@ import DataTable from "./dataTable";
 import { Avater } from "../assets";
 
 export default function DashboardUsers() {
-  const users = useSelector((state) => state?.allUsers);
+  const users = useSelector((state) => state?.allUsers) || [];
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!users) {
+    if (users.length === 0) {
       getAllUsers().then((res) => dispatch(setAllUserDetails(res)));
     }
   }, [users]);
@@ -24,6 +24,7 @@ export default function DashboardUsers() {
               <img
                 className="w-32 h-16 object-contain rounded-md"
                 src={rowData?.photoURL ? rowData?.photoURL : Avater}
+                alt={`photo`}
               />
             ),
           },

@@ -94,6 +94,9 @@ export default function DashboardNewItem() {
         setPrice("");
         setImageDownloadUrl(null);
         setProgress(null);
+        setInterval(() => {
+          dispatch(alertNull());
+        }, 2000);
       });
       getAllProducts().then((res) => dispatch(setProducts(res)));
     }

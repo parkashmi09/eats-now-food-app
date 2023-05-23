@@ -9,9 +9,12 @@ import { deleteUsers } from "../redux/actions/userActions";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { Avater } from "../assets";
+import { setCartOn } from "../redux/actions/displayCartAction";
 
 export default function Header() {
   const user = useSelector((state) => state?.user);
+  const cartItems = useSelector((state) => state?.cartItems);
+  console.log("cartItems", cartItems);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const firebaseAuth = getAuth(app);
@@ -26,7 +29,7 @@ export default function Header() {
       .catch((err) => console.log("error", err));
   };
   return (
-    <header className="fixed  backdrop-blur-md z-50 inset-x-0 top-0 flex items-center justify-between px-12 md:px-20 py-6">
+    <header className="fixed  backdrop-blur-md z-50 inset-x-0 top-0 flex items-center justify-between py-6">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         Logo
       </NavLink>
@@ -64,11 +67,19 @@ export default function Header() {
           >
             About Us
           </NavLink>
-          <motion.div {...buttonClick} className="relative cursor-pointer">
+          <motion.div
+            {...buttonClick}
+            onClick={() => dispatch(setCartOn())}
+            className="relative cursor-pointer"
+          >
             <MdShoppingCart className="text-3xl text-textColor " />
-            <div className="absolute -top-4 -right-1 h-6 w-6 rounded-full flex items-center justify-center bg-red-500">
-              <p className="text-primary text-base absolute">2</p>
-            </div>
+            {cartItems?.length > 0 && (
+              <div className="absolute -top-4 -right-1 h-6 w-6 rounded-full flex items-center justify-center bg-red-500">
+                <p className="text-primary text-base absolute">
+                  {cartItems?.length}
+                </p>
+              </div>
+            )}
           </motion.div>
           {user ? (
             <>

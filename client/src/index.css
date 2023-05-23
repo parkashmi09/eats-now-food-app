@@ -11,8 +11,21 @@ body {
     "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
     sans-serif;
 }
+body {
+  overflow-x: hidden !important;
+}
 .MuiPaper-root {
   width: 100%;
+}
+.full-width {
+  width: 22% !important;
+}
+.extra-height {
+  height: 420px !important;
+}
+.padding-cls{
+  padding-left: 3rem;
+  padding-right: 3rem;
 }
 @tailwind base;
 @tailwind components;

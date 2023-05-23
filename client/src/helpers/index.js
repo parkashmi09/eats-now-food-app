@@ -50,3 +50,41 @@ export const getAllUsers = async () => {
     return err;
   }
 };
+
+export const addNewItemToCart = async (userId, data) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}/api/products/addToCart/${userId}`,
+      {
+        ...data,
+      }
+    );
+    return res?.data?.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const getAllCartItems = async (userId) => {
+  try {
+    const res = await axios.get(
+      `${baseUrl}/api/products/getCartItems/${userId}`
+    );
+    return res?.data?.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const updateQuanitity = async (userId, productId, type) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}/api/products/updateCart/${userId}`,
+      null,
+      { params: { productId: productId, type: type } }
+    );
+    return res?.data?.data;
+  } catch (err) {
+    return err;
+  }
+};

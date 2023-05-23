@@ -4,11 +4,12 @@ import { Dashboard, Login, Main } from "./containers";
 import { getAuth } from "firebase/auth";
 import { app } from "./config/firebase.config";
 import { motion } from "framer-motion";
-import { validateJwtToken } from "./helpers";
+import { getAllCartItems, validateJwtToken } from "./helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "./redux/actions/userActions";
 import { Loader } from "rsuite";
-import { Alert } from "./components";
+import { Alert, Checkout, CheckoutSuccess } from "./components";
+import { setCartItems } from "./redux/actions/cartAction";
 
 export default function App() {
   const [laoding, setLoading] = useState(false);
@@ -21,6 +22,11 @@ export default function App() {
       if (cred) {
         cred.getIdToken().then((token) =>
           validateJwtToken(token).then((data) => {
+            if (data) {
+              getAllCartItems(data?.user_id).then((items) => {
+                dispatch(setCartItems(items));
+              });
+            }
             dispatch(setUserDetails(data));
           })
         );
@@ -41,6 +47,7 @@ export default function App() {
         <Route path="/*" element={<Main />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/checkout-success" element={<Checkout />} />
       </Routes>
       {alert?.type && <Alert type={alert?.type} message={alert?.message} />}
     </div>

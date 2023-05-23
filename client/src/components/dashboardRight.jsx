@@ -11,7 +11,7 @@ export default function DashboardRight() {
     getAllProducts().then((res) => dispatch(setProducts(res)));
   }, []);
   return (
-    <div className="flex flex-col py-12 flex-1 h-full px-12">
+    <div className="flex flex-col py-12 flex-1 w-full h-full px-12">
       <DBHeader />
       <div className="flex flex-col overflow-y-scroll">
         <Routes>

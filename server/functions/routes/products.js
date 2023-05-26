@@ -168,11 +168,19 @@ router.post("/updateCart/:user_id", async (req, res) => {
   }
 });
 router.post("/create-checkout-session", async (req, res) => {
-  console.log("data comes like", req.body.data);
   const customer = await stripe.customers.create({
     metadata: {
       user_id: req.body.data?.user?.data?.user_id,
-      cart: JSON.stringify(req.body.data.items),
+      cart: JSON.stringify(
+        req.body.data?.cart?.map((item) => {
+          return {
+            productId: item?.productId,
+            productName: item?.productName,
+            productPrice: item?.productPrice,
+          };
+        })
+      ),
+
       total: req.body.data.total,
     },
   });
@@ -187,7 +195,7 @@ router.post("/create-checkout-session", async (req, res) => {
             id: item?.productId,
           },
         },
-        unit_amount: item?.productPrice,
+        unit_amount: item?.productPrice * 100,
       },
       quantity: item?.quanitity,
     };
@@ -276,20 +284,14 @@ router.post(
     }
     if (eventType === "checkout.session.completed") {
       stripe.customers.retrieve(data.customer).then((customer) => {
-        // console.log("customers are", customer);
-        // console.log("metadata - total:", customer.metadata.total);
-        // console.log("metadata - user_id:", customer.metadata.user_id);
-        // console.log("data are", data);
         createOrder(customer, data, res);
       });
     }
-    // Return a 200 res to acknowledge receipt of the event
     res.send().end();
   }
 );
 
 const createOrder = async (customer, intent, res) => {
-  console.log("create pordorder start", intent)
   try {
     const orderId = Date.now();
     const data = {
@@ -298,7 +300,7 @@ const createOrder = async (customer, intent, res) => {
       amount: intent.amount_total,
       created: intent.created,
       payment_method_types: intent.payment_method_types,
-      status: intent.payment.status,
+      status: intent.payment_status,
       customer: intent.customer_details,
       shipping_details: intent.shipping_details,
       userId: customer.metadata.user_id,
@@ -308,26 +310,55 @@ const createOrder = async (customer, intent, res) => {
     };
     await db.collection("orders").doc(`/${orderId}/`).set(data);
     deleteCart(customer.metadata.user_id, JSON.parse(customer.metadata.cart));
-    console.log("***********deleted call***************");
     return res.status(200).send({ success: true });
   } catch (err) {
-    res.status(400).send(`Webhook Error: ${err.message}`);
+    console.log(err);
     return;
   }
 };
 
 const deleteCart = async (userId, items) => {
-  console.log("users id", userId);
-  console.log("**********dleet foitstg");
   items?.map(async (data) => {
-    console.log("inside map users", userId, data?.productId);
     await db
       .collection("cartItems")
       .doc(`/${userId}/`)
       .collection("items")
       .doc(`${data.productId}`)
-      .delete().then(()=>console.log("delete sucess"));
+      .delete();
   });
 };
+
+router.get("/allOrders", async (req, res) => {
+  (async () => {
+    try {
+      let query = db.collection("orders");
+      let response = [];
+      await query.get().then((querySnap) => {
+        let docs = querySnap.docs;
+        docs?.map((doc) => {
+          response.push({ ...doc.data() });
+        });
+        return response;
+      });
+      return res.status(200).send({ success: true, data: response });
+    } catch (err) {
+      return res.send({ success: false, msg: `Error : ${err}` });
+    }
+  })();
+});
+
+router.post("/updateOrder/:orderId", async (req, res) => {
+  const orderId = req.params.orderId;
+  const sts = req.query.sts;
+  try {
+    const updateItem = await db
+      .collection("orders")
+      .doc(`/${orderId}/`)
+      .update({ sts });
+      return res.status(200).send({ success: true, data: updateItem});
+  } catch (err) {
+    return res.send({ success: false, msg: `Error : ${err}` });
+  }
+});
 
 module.exports = router;

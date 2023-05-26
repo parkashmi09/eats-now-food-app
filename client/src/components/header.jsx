@@ -101,12 +101,15 @@ export default function Header() {
                     onMouseLeave={() => setIsMenu(false)}
                     className="px-12 py-4 w-[233px] bg-lightOverlay backdrop-blur-md rounded-md shadow-md absolute top-12 right-0 flex flex-col items-center justify-center gap-4"
                   >
-                    <Link
-                      to={"/dashboard/home"}
-                      className="hover:text-red-500 text-xl text-textColor"
-                    >
-                      Dasboard
-                    </Link>
+                    {user?.data?.user_id === process.env.REACT_APP_ADMIN_ID && (
+                      <Link
+                        to={"/dashboard/home"}
+                        className="hover:text-red-500 text-xl text-textColor"
+                      >
+                        Dasboard
+                      </Link>
+                    )}
+
                     <Link
                       to={"/profile"}
                       className="hover:text-red-500 text-xl text-textColor"

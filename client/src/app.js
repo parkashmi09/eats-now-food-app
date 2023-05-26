@@ -8,7 +8,7 @@ import { getAllCartItems, validateJwtToken } from "./helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetails } from "./redux/actions/userActions";
 import { Loader } from "rsuite";
-import { Alert, Checkout, CheckoutSuccess } from "./components";
+import { Alert, Checkout, UserOrders } from "./components";
 import { setCartItems } from "./redux/actions/cartAction";
 
 export default function App() {
@@ -48,6 +48,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/checkout-success" element={<Checkout />} />
+        <Route path="/user-orders" element={<UserOrders />} />
       </Routes>
       {alert?.type && <Alert type={alert?.type} message={alert?.message} />}
     </div>

@@ -88,3 +88,24 @@ export const updateQuanitity = async (userId, productId, type) => {
     return err;
   }
 };
+export const getAllOrders = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/products/allOrders`);
+    return response?.data?.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const updateOrderStatus = async (orderId, sts) => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}/api/products/updateOrder/${orderId}`,
+      null,
+      { params: { sts: sts } }
+    );
+    return res?.data?.data;
+  } catch (err) {
+    return err;
+  }
+};
